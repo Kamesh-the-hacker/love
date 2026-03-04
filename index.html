@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Love Link Generator ❤️</title>
+
+<style>
+
+body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+background:linear-gradient(135deg,#ff4e8a,#ff9ecf);
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+overflow:hidden;
+}
+
+.card{
+background:white;
+padding:30px;
+border-radius:20px;
+box-shadow:0 15px 40px rgba(0,0,0,0.25);
+width:90%;
+max-width:400px;
+text-align:center;
+}
+
+h1{
+color:#ff4e8a;
+margin-bottom:20px;
+}
+
+input{
+width:100%;
+padding:12px;
+border-radius:25px;
+border:1px solid #ff4e8a;
+margin-bottom:15px;
+font-size:16px;
+}
+
+button{
+padding:12px 25px;
+border:none;
+border-radius:25px;
+background:#ff4e8a;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+#generatedLink{
+margin-top:15px;
+word-break:break-all;
+font-size:14px;
+color:#444;
+}
+
+/* Proposal Mode Styles */
+
+.proposal{
+position:fixed;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background:linear-gradient(135deg,#ff4e8a,#ff2d6f);
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+color:white;
+text-align:center;
+padding:20px;
+}
+
+.heart{
+position:absolute;
+color:white;
+animation:float linear infinite;
+opacity:0.8;
+}
+
+@keyframes float{
+0%{transform:translateY(100vh);opacity:0;}
+50%{opacity:1;}
+100%{transform:translateY(-10vh);opacity:0;}
+}
+
+.buttons{
+margin-top:20px;
+position:relative;
+height:80px;
+}
+
+.buttons button{
+position:absolute;
+}
+
+#yes{left:20%;}
+#no{right:20%; background:#333;}
+
+.ring{
+font-size:60px;
+animation:spin 2s linear infinite;
+margin-bottom:20px;
+}
+
+@keyframes spin{
+from{transform:rotate(0deg);}
+to{transform:rotate(360deg);}
+}
+
+</style>
+</head>
+<body>
+
+<div id="generator" class="card">
+<h1>Create Love Link 💞</h1>
+<input id="partnerName" placeholder="Enter Partner Name ❤️">
+<button onclick="generateLink()">Generate Link</button>
+<div id="generatedLink"></div>
+</div>
+
+<script>
+
+/* Detect if link has name parameter */
+const params = new URLSearchParams(window.location.search);
+const name = params.get("name");
+
+if(name){
+showProposal(name);
+}
+
+/* Generate Link */
+function generateLink(){
+const nameInput = document.getElementById("partnerName").value.trim();
+if(nameInput===""){
+alert("Enter a name ❤️");
+return;
+}
+
+const url = window.location.origin + window.location.pathname + "?name=" + encodeURIComponent(nameInput);
+
+document.getElementById("generatedLink").innerHTML =
+"Send this to your partner 💌:<br><br>" +
+"<b>" + url + "</b>";
+}
+
+/* Show Proposal Mode */
+function showProposal(loverName){
+
+document.getElementById("generator").style.display="none";
+
+const div=document.createElement("div");
+div.className="proposal";
+div.innerHTML=`
+<h1>Hey ${loverName} ❤️</h1>
+<p id="message"></p>
+
+<div class="buttons">
+<button id="yes" onclick="accepted('${loverName}')">Yes 💖</button>
+<button id="no" onmouseover="moveNo()">No 😅</button>
+</div>
+`;
+
+document.body.appendChild(div);
+
+/* Typewriter */
+const text="From the moment I met you, my heart knew you were special. Will you be mine forever?";
+let i=0;
+function typeWriter(){
+if(i<text.length){
+document.getElementById("message").innerHTML+=text.charAt(i);
+i++;
+setTimeout(typeWriter,40);
+}
+}
+typeWriter();
+
+/* Floating Hearts */
+setInterval(()=>{
+const heart=document.createElement("div");
+heart.className="heart";
+heart.innerHTML="❤️";
+heart.style.left=Math.random()*100+"vw";
+heart.style.fontSize=(Math.random()*25+15)+"px";
+heart.style.animationDuration=(Math.random()*3+4)+"s";
+document.body.appendChild(heart);
+setTimeout(()=>heart.remove(),7000);
+},400);
+
+}
+
+/* Move No Button */
+function moveNo(){
+const btn=document.getElementById("no");
+btn.style.position="fixed";
+btn.style.left=Math.random()*80+"vw";
+btn.style.top=Math.random()*80+"vh";
+}
+
+/* Accepted */
+function accepted(name){
+document.body.innerHTML=`
+<div class="proposal">
+<div class="ring">💍</div>
+<h1>Yay ${name}! ❤️</h1>
+<p>You just made me the happiest person alive! 💞</p>
+</div>
+`;
+}
+
+</script>
+
+</body>
+</html>
