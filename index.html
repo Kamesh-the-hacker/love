@@ -5,7 +5,6 @@
 <title>Love Link Generator ❤️</title>
 
 <style>
-
 body{
 margin:0;
 font-family:'Segoe UI',sans-serif;
@@ -27,10 +26,7 @@ max-width:400px;
 text-align:center;
 }
 
-h1{
-color:#ff4e8a;
-margin-bottom:20px;
-}
+h1{color:#ff4e8a;}
 
 input{
 width:100%;
@@ -58,7 +54,7 @@ font-size:14px;
 color:#444;
 }
 
-/* Proposal Mode Styles */
+/* Proposal Mode */
 
 .proposal{
 position:fixed;
@@ -93,14 +89,15 @@ opacity:0.8;
 margin-top:20px;
 position:relative;
 height:80px;
+width:250px;
 }
 
 .buttons button{
 position:absolute;
 }
 
-#yes{left:20%;}
-#no{right:20%; background:#333;}
+#yes{left:10%;}
+#no{right:10%; background:#333;}
 
 .ring{
 font-size:60px;
@@ -112,9 +109,9 @@ margin-bottom:20px;
 from{transform:rotate(0deg);}
 to{transform:rotate(360deg);}
 }
-
 </style>
 </head>
+
 <body>
 
 <div id="generator" class="card">
@@ -126,7 +123,7 @@ to{transform:rotate(360deg);}
 
 <script>
 
-/* Detect if link has name parameter */
+/* Detect Proposal Mode */
 const params = new URLSearchParams(window.location.search);
 const name = params.get("name");
 
@@ -142,14 +139,15 @@ alert("Enter a name ❤️");
 return;
 }
 
-const url = window.location.origin + window.location.pathname + "?name=" + encodeURIComponent(nameInput);
+/* 🔥 IMPORTANT: Hardcoded your GitHub URL */
+const baseUrl = "https://kamesh-the-hacker.github.io/love/";
+const finalUrl = baseUrl + "?name=" + encodeURIComponent(nameInput);
 
 document.getElementById("generatedLink").innerHTML =
-"Send this to your partner 💌:<br><br>" +
-"<b>" + url + "</b>";
+"Send this to your partner 💌:<br><br><b>" + finalUrl + "</b>";
 }
 
-/* Show Proposal Mode */
+/* Show Proposal */
 function showProposal(loverName){
 
 document.getElementById("generator").style.display="none";
@@ -194,7 +192,7 @@ setTimeout(()=>heart.remove(),7000);
 
 }
 
-/* Move No Button */
+/* No Button Moves */
 function moveNo(){
 const btn=document.getElementById("no");
 btn.style.position="fixed";
@@ -202,7 +200,7 @@ btn.style.left=Math.random()*80+"vw";
 btn.style.top=Math.random()*80+"vh";
 }
 
-/* Accepted */
+/* Yes Click */
 function accepted(name){
 document.body.innerHTML=`
 <div class="proposal">
