@@ -122,24 +122,31 @@ border-radius:50%;
 background:white;
 pointer-events:none;
 }
+
+/* Generated Link Container */
+#generatedContainer{
+margin-top:15px;
+display:none;
+}
 </style>
 </head>
 <body>
 
+<!-- Lock Screen -->
 <div id="lockScreen" class="card">
 <h1>🔒 Enter Partner Name</h1>
 <input id="partnerName" placeholder="Enter Partner Name ❤️">
 <button onclick="unlock()">Unlock & Generate Link</button>
-</div>
 
-<div id="generator" class="card" style="display:none">
-<h1>Create Love Link 💞</h1>
+<!-- Generated Link + Copy Button -->
+<div id="generatedContainer">
+<p>Send this to your partner 💌:</p>
 <div id="generatedLink"></div>
 <button onclick="copyLink()">Copy Link 💌</button>
 </div>
+</div>
 
 <script>
-
 /* GitHub Pages Base URL */
 const baseUrl = "https://kamesh-the-hacker.github.io/love/";
 
@@ -152,30 +159,29 @@ showProposal(name);
 
 /* Unlock Screen */
 function unlock(){
-const inputName=document.getElementById("partnerName").value.trim();
-if(inputName===""){alert("Enter a name ❤️"); return;}
-document.getElementById("lockScreen").style.display="none";
-document.getElementById("generator").style.display="block";
-const finalUrl = baseUrl + "?name=" + encodeURIComponent(inputName);
-document.getElementById("generatedLink").innerHTML = `<b>${finalUrl}</b>`;
-window.generatedLink = finalUrl;
+  const inputName = document.getElementById("partnerName").value.trim();
+  if(inputName===""){alert("Enter a name ❤️"); return;}
+
+  const finalUrl = baseUrl + "?name=" + encodeURIComponent(inputName);
+  document.getElementById("generatedLink").innerHTML = `<b>${finalUrl}</b>`;
+  document.getElementById("generatedContainer").style.display = "block";
+
+  window.generatedLink = finalUrl;
 }
 
 /* Copy Link */
 function copyLink(){
-navigator.clipboard.writeText(window.generatedLink);
-alert("Link copied! 💌 Send it to your partner!");
+  navigator.clipboard.writeText(window.generatedLink);
+  alert("Link copied! 💌 Send it to your partner!");
 }
 
 /* Proposal Mode */
 function showProposal(loverName){
+  document.getElementById("lockScreen")?.remove();
 
-document.getElementById("lockScreen")?.remove();
-document.getElementById("generator")?.remove();
-
-const div=document.createElement("div");
-div.className="proposal";
-div.innerHTML=`
+  const div=document.createElement("div");
+  div.className="proposal";
+  div.innerHTML=`
 <h1>Hey ${loverName} ❤️</h1>
 <p id="message"></p>
 <div class="buttons">
@@ -183,44 +189,44 @@ div.innerHTML=`
 <button id="no" onmouseover="moveNo()">No 😅</button>
 </div>
 `;
-document.body.appendChild(div);
+  document.body.appendChild(div);
 
-/* Typewriter Message */
-const text="From the moment I met you, my heart knew you were special. Will you be mine forever?";
-let i=0;
-function typeWriter(){
-if(i<text.length){
-document.getElementById("message").innerHTML+=text.charAt(i);
-i++;
-setTimeout(typeWriter,40);
-}}
-typeWriter();
+  /* Typewriter Message */
+  const text="From the moment I met you, my heart knew you were special. Will you be mine forever?";
+  let i=0;
+  function typeWriter(){
+    if(i<text.length){
+      document.getElementById("message").innerHTML+=text.charAt(i);
+      i++;
+      setTimeout(typeWriter,40);
+    }
+  }
+  typeWriter();
 
-/* Floating Hearts & Petals */
-setInterval(()=>{
-const e=document.createElement(Math.random()<0.5?"div":"div");
-e.className=Math.random()<0.5?"heart":"petal";
-e.innerHTML=Math.random()<0.5?"❤️":"🌹";
-e.style.left=Math.random()*100+"vw";
-e.style.fontSize=(Math.random()*25+15)+"px";
-e.style.animationDuration=(Math.random()*3+5)+"s";
-document.body.appendChild(e);
-setTimeout(()=>e.remove(),8000);
-},300);
-
+  /* Floating Hearts & Petals */
+  setInterval(()=>{
+    const e=document.createElement(Math.random()<0.5?"div":"div");
+    e.className=Math.random()<0.5?"heart":"petal";
+    e.innerHTML=Math.random()<0.5?"❤️":"🌹";
+    e.style.left=Math.random()*100+"vw";
+    e.style.fontSize=(Math.random()*25+15)+"px";
+    e.style.animationDuration=(Math.random()*3+5)+"s";
+    document.body.appendChild(e);
+    setTimeout(()=>e.remove(),8000);
+  },300);
 }
 
 /* Move No Button */
 function moveNo(){
-const btn=document.getElementById("no");
-btn.style.position="fixed";
-btn.style.left=Math.random()*80+"vw";
-btn.style.top=Math.random()*80+"vh";
+  const btn=document.getElementById("no");
+  btn.style.position="fixed";
+  btn.style.left=Math.random()*80+"vw";
+  btn.style.top=Math.random()*80+"vh";
 }
 
 /* Accepted - Fireworks + Ring */
 function accepted(name){
-document.body.innerHTML=`
+  document.body.innerHTML=`
 <div class="proposal">
 <div class="ring">💍</div>
 <h1>Yay ${name}! ❤️</h1>
@@ -228,35 +234,35 @@ document.body.innerHTML=`
 </div>
 `;
 
-/* Fireworks Animation */
-for(let i=0;i<50;i++){
-const f=document.createElement("div");
-f.className="firework";
-f.style.left=Math.random()*100+"vw";
-f.style.top=Math.random()*50+"vh";
-f.style.width=Math.random()*6+4+"px";
-f.style.height=f.style.width;
-f.style.background=`hsl(${Math.random()*360},100%,75%)`;
-document.body.appendChild(f);
-explode(f);
-}
+  /* Fireworks Animation */
+  for(let i=0;i<50;i++){
+    const f=document.createElement("div");
+    f.className="firework";
+    f.style.left=Math.random()*100+"vw";
+    f.style.top=Math.random()*50+"vh";
+    f.style.width=Math.random()*6+4+"px";
+    f.style.height=f.style.width;
+    f.style.background=`hsl(${Math.random()*360},100%,75%)`;
+    document.body.appendChild(f);
+    explode(f);
+  }
 }
 
 function explode(el){
-let angle=Math.random()*2*Math.PI;
-let speed=Math.random()*6+2;
-let dx=speed*Math.cos(angle);
-let dy=speed*Math.sin(angle);
-let life=60;
-let id=setInterval(()=>{
-let left=parseFloat(el.style.left);
-let top=parseFloat(el.style.top);
-el.style.left=(left+dx)+"px";
-el.style.top=(top+dy)+"px";
-dy+=0.3; // gravity
-life--;
-if(life<=0){el.remove(); clearInterval(id);}
-},20);
+  let angle=Math.random()*2*Math.PI;
+  let speed=Math.random()*6+2;
+  let dx=speed*Math.cos(angle);
+  let dy=speed*Math.sin(angle);
+  let life=60;
+  let id=setInterval(()=>{
+    let left=parseFloat(el.style.left);
+    let top=parseFloat(el.style.top);
+    el.style.left=(left+dx)+"px";
+    el.style.top=(top+dy)+"px";
+    dy+=0.3; // gravity
+    life--;
+    if(life<=0){el.remove(); clearInterval(id);}
+  },20);
 }
 </script>
 </body>
