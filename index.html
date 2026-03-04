@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Love Link Generator ❤️</title>
+<title>Ultimate Love Link 💖</title>
 
 <style>
 body{
@@ -16,6 +16,7 @@ height:100vh;
 overflow:hidden;
 }
 
+/* Card for Generator / Lock */
 .card{
 background:white;
 padding:30px;
@@ -24,10 +25,10 @@ box-shadow:0 15px 40px rgba(0,0,0,0.25);
 width:90%;
 max-width:400px;
 text-align:center;
+position:relative;
 }
 
-h1{color:#ff4e8a;}
-
+/* Input */
 input{
 width:100%;
 padding:12px;
@@ -37,6 +38,7 @@ margin-bottom:15px;
 font-size:16px;
 }
 
+/* Buttons */
 button{
 padding:12px 25px;
 border:none;
@@ -45,17 +47,10 @@ background:#ff4e8a;
 color:white;
 font-size:16px;
 cursor:pointer;
-}
-
-#generatedLink{
-margin-top:15px;
-word-break:break-all;
-font-size:14px;
-color:#444;
+margin-top:10px;
 }
 
 /* Proposal Mode */
-
 .proposal{
 position:fixed;
 top:0;
@@ -70,19 +65,13 @@ align-items:center;
 color:white;
 text-align:center;
 padding:20px;
+overflow:hidden;
 }
 
-.heart{
-position:absolute;
-color:white;
-animation:float linear infinite;
-opacity:0.8;
-}
-
-@keyframes float{
-0%{transform:translateY(100vh);opacity:0;}
-50%{opacity:1;}
-100%{transform:translateY(-10vh);opacity:0;}
+#message{
+min-height:80px;
+font-size:16px;
+margin-bottom:20px;
 }
 
 .buttons{
@@ -109,64 +98,94 @@ margin-bottom:20px;
 from{transform:rotate(0deg);}
 to{transform:rotate(360deg);}
 }
+
+/* Hearts & Petals */
+.heart, .petal{
+position:absolute;
+animation:float linear infinite;
+opacity:0.8;
+pointer-events:none;
+}
+
+@keyframes float{
+0%{transform:translateY(100vh);opacity:0;}
+50%{opacity:1;}
+100%{transform:translateY(-10vh);opacity:0;}
+}
+
+/* Fireworks */
+.firework{
+position:absolute;
+width:5px;
+height:5px;
+border-radius:50%;
+background:white;
+pointer-events:none;
+}
 </style>
 </head>
-
 <body>
 
-<div id="generator" class="card">
-<h1>Create Love Link 💞</h1>
+<div id="lockScreen" class="card">
+<h1>🔒 Enter Partner Name</h1>
 <input id="partnerName" placeholder="Enter Partner Name ❤️">
-<button onclick="generateLink()">Generate Link</button>
+<button onclick="unlock()">Unlock & Generate Link</button>
+</div>
+
+<div id="generator" class="card" style="display:none">
+<h1>Create Love Link 💞</h1>
 <div id="generatedLink"></div>
+<button onclick="copyLink()">Copy Link 💌</button>
 </div>
 
 <script>
 
-/* Detect Proposal Mode */
+/* GitHub Pages Base URL */
+const baseUrl = "https://kamesh-the-hacker.github.io/love/";
+
+/* Proposal Detection */
 const params = new URLSearchParams(window.location.search);
 const name = params.get("name");
-
 if(name){
 showProposal(name);
 }
 
-/* Generate Link */
-function generateLink(){
-const nameInput = document.getElementById("partnerName").value.trim();
-if(nameInput===""){
-alert("Enter a name ❤️");
-return;
+/* Unlock Screen */
+function unlock(){
+const inputName=document.getElementById("partnerName").value.trim();
+if(inputName===""){alert("Enter a name ❤️"); return;}
+document.getElementById("lockScreen").style.display="none";
+document.getElementById("generator").style.display="block";
+const finalUrl = baseUrl + "?name=" + encodeURIComponent(inputName);
+document.getElementById("generatedLink").innerHTML = `<b>${finalUrl}</b>`;
+window.generatedLink = finalUrl;
 }
 
-/* 🔥 IMPORTANT: Hardcoded your GitHub URL */
-const baseUrl = "https://kamesh-the-hacker.github.io/love/";
-const finalUrl = baseUrl + "?name=" + encodeURIComponent(nameInput);
-
-document.getElementById("generatedLink").innerHTML =
-"Send this to your partner 💌:<br><br><b>" + finalUrl + "</b>";
+/* Copy Link */
+function copyLink(){
+navigator.clipboard.writeText(window.generatedLink);
+alert("Link copied! 💌 Send it to your partner!");
 }
 
-/* Show Proposal */
+/* Proposal Mode */
 function showProposal(loverName){
 
-document.getElementById("generator").style.display="none";
+document.getElementById("lockScreen")?.remove();
+document.getElementById("generator")?.remove();
 
 const div=document.createElement("div");
 div.className="proposal";
 div.innerHTML=`
 <h1>Hey ${loverName} ❤️</h1>
 <p id="message"></p>
-
 <div class="buttons">
 <button id="yes" onclick="accepted('${loverName}')">Yes 💖</button>
 <button id="no" onmouseover="moveNo()">No 😅</button>
 </div>
 `;
-
 document.body.appendChild(div);
 
-/* Typewriter */
+/* Typewriter Message */
 const text="From the moment I met you, my heart knew you were special. Will you be mine forever?";
 let i=0;
 function typeWriter(){
@@ -174,25 +193,24 @@ if(i<text.length){
 document.getElementById("message").innerHTML+=text.charAt(i);
 i++;
 setTimeout(typeWriter,40);
-}
-}
+}}
 typeWriter();
 
-/* Floating Hearts */
+/* Floating Hearts & Petals */
 setInterval(()=>{
-const heart=document.createElement("div");
-heart.className="heart";
-heart.innerHTML="❤️";
-heart.style.left=Math.random()*100+"vw";
-heart.style.fontSize=(Math.random()*25+15)+"px";
-heart.style.animationDuration=(Math.random()*3+4)+"s";
-document.body.appendChild(heart);
-setTimeout(()=>heart.remove(),7000);
-},400);
+const e=document.createElement(Math.random()<0.5?"div":"div");
+e.className=Math.random()<0.5?"heart":"petal";
+e.innerHTML=Math.random()<0.5?"❤️":"🌹";
+e.style.left=Math.random()*100+"vw";
+e.style.fontSize=(Math.random()*25+15)+"px";
+e.style.animationDuration=(Math.random()*3+5)+"s";
+document.body.appendChild(e);
+setTimeout(()=>e.remove(),8000);
+},300);
 
 }
 
-/* No Button Moves */
+/* Move No Button */
 function moveNo(){
 const btn=document.getElementById("no");
 btn.style.position="fixed";
@@ -200,7 +218,7 @@ btn.style.left=Math.random()*80+"vw";
 btn.style.top=Math.random()*80+"vh";
 }
 
-/* Yes Click */
+/* Accepted - Fireworks + Ring */
 function accepted(name){
 document.body.innerHTML=`
 <div class="proposal">
@@ -209,9 +227,37 @@ document.body.innerHTML=`
 <p>You just made me the happiest person alive! 💞</p>
 </div>
 `;
+
+/* Fireworks Animation */
+for(let i=0;i<50;i++){
+const f=document.createElement("div");
+f.className="firework";
+f.style.left=Math.random()*100+"vw";
+f.style.top=Math.random()*50+"vh";
+f.style.width=Math.random()*6+4+"px";
+f.style.height=f.style.width;
+f.style.background=`hsl(${Math.random()*360},100%,75%)`;
+document.body.appendChild(f);
+explode(f);
+}
 }
 
+function explode(el){
+let angle=Math.random()*2*Math.PI;
+let speed=Math.random()*6+2;
+let dx=speed*Math.cos(angle);
+let dy=speed*Math.sin(angle);
+let life=60;
+let id=setInterval(()=>{
+let left=parseFloat(el.style.left);
+let top=parseFloat(el.style.top);
+el.style.left=(left+dx)+"px";
+el.style.top=(top+dy)+"px";
+dy+=0.3; // gravity
+life--;
+if(life<=0){el.remove(); clearInterval(id);}
+},20);
+}
 </script>
-
 </body>
 </html>
